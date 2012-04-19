@@ -1,4 +1,4 @@
-package org.mixare.plugin.arenaprocessor;
+package org.mixare.plugin;
 
 import java.io.IOException;
 import java.io.InputStream;
