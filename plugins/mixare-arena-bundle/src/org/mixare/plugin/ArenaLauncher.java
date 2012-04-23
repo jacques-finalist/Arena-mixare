@@ -48,9 +48,8 @@ public class ArenaLauncher extends Activity {
 		// installed
 		if (isMixareInstalled) {
 			// start mixare
-			Intent i = new Intent();
-			i.setAction(Intent.ACTION_VIEW);
-			i.setDataAndType(Uri.parse("http://www.mixare.org/geotest.php"), "application/mixare-json");
+			Intent i = new Intent("android.intent.category.LAUNCHER");
+			i.setClassName("org.mixare", "org.mixare.MainActivity");
 			startActivity(i);
 
 		} else {
@@ -62,11 +61,11 @@ public class ArenaLauncher extends Activity {
 				i.setData(Uri.parse("market://details?id=org.mixare"));
 				startActivity(i);
 
-				finish();
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
 		}
+		finish();
 
 	}
 
