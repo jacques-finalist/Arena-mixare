@@ -6,6 +6,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.widget.Toast;
 
 public class ArenaLauncher extends Activity {
 
@@ -55,9 +56,10 @@ public class ArenaLauncher extends Activity {
 		} else {
 			// Mixare is not installed, let's go to the market!
 			try {
+				Toast.makeText(this, "Mixare moet geinstalleerd zijn om de applicatie te kunnen gebruiken.", Toast.LENGTH_LONG).show();
 				Intent i = new Intent();
 				i.setAction(Intent.ACTION_VIEW);
-				i.setData(Uri.parse("market://search?q=pname:org.mixare"));
+				i.setData(Uri.parse("market://details?id=org.mixare"));
 				startActivity(i);
 
 				finish();
