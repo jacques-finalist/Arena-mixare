@@ -22,12 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONException;
-import org.mixare.MixView;
 import org.mixare.data.DataSource;
 import org.mixare.lib.marker.Marker;
 import org.mixare.lib.reality.PhysicalPlace;
-
-import android.widget.Toast;
 
 /**
  * This class is responsible for converting raw data to marker data
@@ -63,36 +60,39 @@ public class DataConvertor {
 	}
 	
 	public List<Marker> load(String url, String rawResult, DataSource ds){
-		DataProcessor dataProcessor = searchForMatchingDataProcessors(url, rawResult);
+		DataProcessor dataProcessor = searchForMatchingDataProcessors(url, rawResult, ds.getType());
 		if(dataProcessor == null){
 			dataProcessor = new MixareDataProcessor(); //using this as default if nothing is found.
 		}
 		try {
 			return dataProcessor.load(rawResult, ds.getTaskId(), ds.getColor());
 		} catch (JSONException e) {
-			MixView.CONTEXT.runOnUiThread(new Runnable() {
-				
+			/* Find Other Away to notify Error, for now Hide this error
+			 MixView.CONTEXT.runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
 					Toast.makeText(MixView.CONTEXT, "Could not process the url data", Toast.LENGTH_LONG).show();
 				}
 			});
+			*/
 		}
 		return null;
 	}
 	
-	private DataProcessor searchForMatchingDataProcessors(String url, String rawResult){
+	private DataProcessor searchForMatchingDataProcessors(String url, String rawResult, DataSource.TYPE type){
 		for(DataProcessor dp : dataProcessors){
-			//checking if url matches any dataprocessor identifiers
-			for(String urlIdentifier : dp.getUrlMatch()){
-				if(url.contains(urlIdentifier)){
-					return dp;
+			if(dp.matchesRequiredType(type.name())){
+				//checking if url matches any dataprocessor identifiers
+				for(String urlIdentifier : dp.getUrlMatch()){
+					if(url.toLowerCase().contains(urlIdentifier.toLowerCase())){
+						return dp;
+					}
 				}
-			}
-			//checking if data matches any dataprocessor identifiers
-			for(String dataIdentifier : dp.getDataMatch()){
-				if(rawResult.contains(dataIdentifier)){
-					return dp;
+				//checking if data matches any dataprocessor identifiers
+				for(String dataIdentifier : dp.getDataMatch()){
+					if(rawResult.contains(dataIdentifier)){
+						return dp;
+					}
 				}
 			}
 		}
