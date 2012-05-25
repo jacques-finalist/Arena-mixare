@@ -265,7 +265,6 @@ public class MixMap extends MapActivity implements OnTouchListener{
 			togglePath();
 			//refresh:
 			startActivity(getIntent()); 
-			//finish();
 			closeMapViewActivity();
 		}
 		return true;

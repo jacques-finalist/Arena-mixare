@@ -218,6 +218,7 @@ public class MixView extends Activity implements SensorEventListener, OnTouchLis
 			killOnError();
 			getMixViewData().getMixContext().doResume(this);
 
+			getDataView().refresh();
 			getDataView().doStart();
 			getDataView().clearEvents();
 
@@ -380,10 +381,6 @@ public class MixView extends Activity implements SensorEventListener, OnTouchLis
 		setContentView(camScreen);
 	}
 	
-	public void refresh(){
-		dataView.refresh();
-	}
-
 	/**
 	 * Checks augScreen, if it does not exist, it creates one.
 	 */
@@ -426,6 +423,11 @@ public class MixView extends Activity implements SensorEventListener, OnTouchLis
 //		}catch (Exception ex){
 //		}
 	}
+	
+	public void refresh(){
+		dataView.refresh();
+	}
+
 	public void setErrorDialog(){
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setMessage(getString(R.string.connection_error_dialog));
