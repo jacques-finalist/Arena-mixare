@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.mixare.plugin"
-    android:versionCode="2"
-    android:versionName="1.0 Stable" >
+    android:versionCode="3"
+    android:versionName="1.1" >
 
-    <uses-sdk android:minSdkVersion="3" android:targetSdkVersion="9"/>
+    <uses-sdk android:minSdkVersion="3" android:targetSdkVersion="10"/>
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     
     <application
         android:icon="@drawable/ic_launcher"
@@ -58,6 +59,16 @@
                <category android:name="mixare.intent.category.DATAHANDLER_PLUGIN"/>
             </intent-filter>
         </service>
+                
+        <service
+            android:name=".service.OfflineService"
+            android:exported="true" >
+            <intent-filter>
+               <action android:name="org.mixare.plugin.dataconverter"/>
+               <category android:name="mixare.intent.category.DATACONVERTER_PLUGIN"/>
+            </intent-filter>
+        </service>
+        
         
     </application>
 

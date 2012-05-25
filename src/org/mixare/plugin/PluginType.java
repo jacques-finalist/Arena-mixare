@@ -19,6 +19,7 @@
 package org.mixare.plugin;
 
 import org.mixare.plugin.connection.BootStrapActivityConnection;
+import org.mixare.plugin.connection.DataConverterServiceConnection;
 import org.mixare.plugin.connection.DataHandlerServiceConnection;
 import org.mixare.plugin.connection.MarkerServiceConnection;
 
@@ -106,6 +107,23 @@ public enum PluginType{
 		
 		public PluginConnection getPluginConnection() {
 			PluginConnection pluginConnection = new DataHandlerServiceConnection();
+			pluginConnection.setPluginType(this);
+			return pluginConnection;
+		}
+
+		public Loader getLoader() {
+			return Loader.Service;
+		}		
+	},
+	/** Can convert a datasource (url) before any other functions are called on it*/
+	DATACONVERTER(){
+		
+		public String getActionName() {
+			return "org.mixare.plugin.dataconverter";
+		}
+		
+		public PluginConnection getPluginConnection() {
+			PluginConnection pluginConnection = new DataConverterServiceConnection();
 			pluginConnection.setPluginType(this);
 			return pluginConnection;
 		}

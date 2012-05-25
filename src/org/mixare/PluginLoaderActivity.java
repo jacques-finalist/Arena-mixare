@@ -130,5 +130,6 @@ public class PluginLoaderActivity extends Activity {
 		PluginLoader.getInstance().loadPlugin(PluginType.MARKER);
 		PluginLoader.getInstance().loadPlugin(PluginType.BOOTSTRAP_PHASE_2);
 		PluginLoader.getInstance().loadPlugin(PluginType.DATAHANDLER);
+		PluginLoader.getInstance().loadPlugin(PluginType.DATACONVERTER);
 	}
 }

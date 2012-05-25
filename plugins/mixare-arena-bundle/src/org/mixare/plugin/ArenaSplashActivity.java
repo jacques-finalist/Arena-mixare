@@ -23,7 +23,7 @@ public class ArenaSplashActivity extends Activity {
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		setContentView(R.layout.main);
+		setContentView(R.layout.splashscreen);
 		// Runnable exiting the splash screen and launching the menu
 		exitRunnable = new Runnable() {
 			public void run() {

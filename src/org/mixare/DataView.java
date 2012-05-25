@@ -176,8 +176,17 @@ public class DataView {
 				request.getSource());
 		mixContext.getDownloadManager().submitJob(request);
 		state.nextLStatus = MixState.PROCESSING;
+		}
 
-	}
+
+//	public void requestData(DataSource datasource, double lat, double lon, double alt, float radius, String locale) {
+//		DownloadRequest request = new DownloadRequest();
+//		request.params = datasource.createRequestParams(lat, lon, alt, radius, locale);
+//		request.source = datasource;
+//		
+//		mixContext.getDownloadManager().submitJob(request);
+//		state.nextLStatus = MixState.PROCESSING;
+//	}
 
 	public void draw(PaintScreen dw) {
 		mixContext.getRM(cam.transform);
@@ -277,42 +286,7 @@ public class DataView {
 		}
 
 		// Draw Radar
-		String dirTxt = "";
-		int bearing = (int) state.getCurBearing();
-		int range = (int) (state.getCurBearing() / (360f / 16f));
-		// TODO: get strings from the values xml file
-		if (range == 15 || range == 0)
-			dirTxt = "N";
-		else if (range == 1 || range == 2)
-			dirTxt = "NE";
-		else if (range == 3 || range == 4)
-			dirTxt = "E";
-		else if (range == 5 || range == 6)
-			dirTxt = "SE";
-		else if (range == 7 || range == 8)
-			dirTxt = "S";
-		else if (range == 9 || range == 10)
-			dirTxt = "SW";
-		else if (range == 11 || range == 12)
-			dirTxt = "W";
-		else if (range == 13 || range == 14)
-			dirTxt = "NW";
-
-		radarPoints.view = this;
-		dw.paintObj(radarPoints, rx, ry, -state.getCurBearing(), 1);
-		dw.setFill(false);
-		dw.setColor(Color.argb(150, 0, 0, 220));
-		dw.paintLine(lrl.x, lrl.y, rx + RadarPoints.RADIUS, ry
-				+ RadarPoints.RADIUS);
-		dw.paintLine(rrl.x, rrl.y, rx + RadarPoints.RADIUS, ry
-				+ RadarPoints.RADIUS);
-		dw.setColor(Color.rgb(255, 255, 255));
-		dw.setFontSize(12);
-
-		radarText(dw, MixUtils.formatDist(radius * 1000), rx
-				+ RadarPoints.RADIUS, ry + RadarPoints.RADIUS * 2 - 10, false);
-		radarText(dw, "" + bearing + ((char) 176) + " " + dirTxt, rx
-				+ RadarPoints.RADIUS, ry - 5, true);
+		drawRadar(dw);
 
 		// Get next event
 		UIEvent evt = null;
@@ -333,6 +307,49 @@ public class DataView {
 			}
 		}
 		state.nextLStatus = MixState.PROCESSING;
+	}
+
+	/**
+	 * Handles drawing radar and direction.
+	 * @param PaintScreen screen that radar will be drawn to
+	 */
+	private void drawRadar(PaintScreen dw) {
+		String dirTxt = "";
+		int bearing = (int) state.getCurBearing();
+		int range = (int) (state.getCurBearing() / (360f / 16f));
+		// TODO: get strings from the values xml file
+		if (range == 15 || range == 0)
+			dirTxt = getContext().getString(R.string.N);
+		else if (range == 1 || range == 2)
+			dirTxt = getContext().getString(R.string.NE);
+		else if (range == 3 || range == 4)
+			dirTxt = getContext().getString(R.string.E);
+		else if (range == 5 || range == 6)
+			dirTxt = getContext().getString(R.string.SE);
+		else if (range == 7 || range == 8)
+			dirTxt = getContext().getString(R.string.S);
+		else if (range == 9 || range == 10)
+			dirTxt = getContext().getString(R.string.SW);
+		else if (range == 11 || range == 12)
+			dirTxt = getContext().getString(R.string.W);
+		else if (range == 13 || range == 14)
+			dirTxt = getContext().getString(R.string.NW);
+
+		radarPoints.view = this;
+		dw.paintObj(radarPoints, rx, ry, -state.getCurBearing(), 1);
+		dw.setFill(false);
+		dw.setColor(Color.argb(150, 0, 0, 220));
+		dw.paintLine(lrl.x, lrl.y, rx + RadarPoints.RADIUS, ry
+				+ RadarPoints.RADIUS);
+		dw.paintLine(rrl.x, rrl.y, rx + RadarPoints.RADIUS, ry
+				+ RadarPoints.RADIUS);
+		dw.setColor(Color.rgb(255, 255, 255));
+		dw.setFontSize(12);
+
+		radarText(dw, MixUtils.formatDist(radius * 1000), rx
+				+ RadarPoints.RADIUS, ry + RadarPoints.RADIUS * 2 - 10, false);
+		radarText(dw, "" + bearing + ((char) 176) + " " + dirTxt, rx
+				+ RadarPoints.RADIUS, ry - 5, true);
 	}
 
 	private void handleKeyEvent(KeyEvent evt) {
@@ -357,6 +374,8 @@ public class DataView {
 		case KEYCODE_CAMERA:
 			frozen = !frozen;
 			break; // freeze the overlay with the camera button
+		default: //if key is set, then ignore event
+				break;
 		}
 	}
 
@@ -368,6 +387,7 @@ public class DataView {
 			// the following will traverse the markers in ascending order (by
 			// distance) the first marker that
 			// matches triggers the event.
+			//TODO handle collection of markers. (what if user wants the one at the back)
 			for (int i = 0; i < dataHandler.getMarkerCount() && !evtHandled; i++) {
 				Marker pm = dataHandler.getMarker(i);
 
@@ -377,7 +397,7 @@ public class DataView {
 		return evtHandled;
 	}
 
-	void radarText(PaintScreen dw, String txt, float x, float y, boolean bg) {
+	private void radarText(PaintScreen dw, String txt, float x, float y, boolean bg) {
 		float padw = 4, padh = 2;
 		float w = dw.getTextWidth(txt) + padw * 2;
 		float h = dw.getTextAsc() + dw.getTextDesc() + padh * 2;
