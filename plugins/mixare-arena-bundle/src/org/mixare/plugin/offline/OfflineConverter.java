@@ -9,6 +9,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 import android.os.Environment;
+import android.os.StrictMode;
 import android.util.Log;
 
 /**
@@ -31,7 +32,12 @@ public class OfflineConverter {
 
 	public String convert() throws IOException {
 		if (isWritableSDCardMounted()) {
-			return write();
+			String result = write();
+			if(result != null){
+				return result;
+			}else{
+				return "";
+			}
 		} else {
 			throw new IOException("SD Card not found");
 		}
@@ -46,6 +52,7 @@ public class OfflineConverter {
 		String path = Environment.getExternalStorageDirectory() + "/" + folder + "/" + URLEncoder.encode(fileName);
 		File file = new File(path);
 		if(!file.exists()){
+			clearDir();
 			FileOutputStream fos = new FileOutputStream(file);
 			fos.write(readWebPage(fileName).getBytes());
 			fos.close();
@@ -53,11 +60,24 @@ public class OfflineConverter {
 		Log.w("offlineFileConverter", "File already exists");
 		return "file://"+path;
 	}
+	
+	private void clearDir(){
+		String path = Environment.getExternalStorageDirectory() + "/" + folder + "/";
+		File directory = new File(path);
+		if(directory.list() != null){
+			for(String fileName : directory.list()){
+				File file = new File(directory, fileName);
+				file.delete();
+			}
+		}else{
+			directory.mkdirs();
+		}
+	}
 
 	private String readWebPage(String url) throws IOException {
-		URL oracle = new URL(url);
+		URL u = new URL(url);
 		BufferedReader in = new BufferedReader(new InputStreamReader(
-				oracle.openStream()));
+				u.openStream()));
 
 		String result = "";
 		String inputLine;

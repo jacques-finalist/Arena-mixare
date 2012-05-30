@@ -11,6 +11,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,102 +21,120 @@ import android.widget.Button;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-public class BarcodeActivity extends Activity{
-	
+public class BarcodeActivity extends Activity {
+
 	public final String resultType = "Datasource";
-	
+
 	private final String sharedPrefDataSource = "barcodeDs";
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.barcodemenu);
-		addClickHandlers();		
+		addClickHandlers();
 	}
-	
-	private void addClickHandlers(){
-		Button scanButton = (Button)findViewById(R.id.scanButton);
-		scanButton.setOnClickListener(new View.OnClickListener() {			
+
+	private void addClickHandlers() {
+		Button scanButton = (Button) findViewById(R.id.scanButton);
+		scanButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				scan();				
+				scan();
 			}
 		});
-		
-		Button usePrevious = (Button)findViewById(R.id.usePrevious);
-		final String sharedPrefsValue = getSharedPreferences(sharedPrefDataSource, MODE_PRIVATE).getString("url", null);
-		if( sharedPrefsValue != null){
+
+		Button usePrevious = (Button) findViewById(R.id.usePrevious);
+		final String sharedPrefsValue = getSharedPreferences(
+				sharedPrefDataSource, MODE_PRIVATE).getString("url", null);
+		if (sharedPrefsValue != null) {
 			usePrevious.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					String[] url = new String[1];
-					url[0] = changeToOfflineString(sharedPrefsValue); 
-					Intent intent = new Intent();
-					intent.putExtra("resultType", resultType);
-					intent.putExtra("url", url);
-					finish();
+					//tries to change this to an offline string, else returns
+					//online string
+					changeToOfflineString(sharedPrefsValue);					
 				}
 			});
-		}else{
+		} else {
 			usePrevious.setClickable(false);
 		}
-
 	}
 	
+	public void closeScanner(String u){
+		String[] url = new String[1];
+		url[0] = u;
+		Intent intent = new Intent();
+		intent.putExtra("resultType", resultType);
+		intent.putExtra("url", url);
+		setResult(BarcodeService.ACTIVITY_REQUEST_CODE, intent);
+		finish();
+	}
+
 	/**
-	 * If the offline modus has been activated, then 
-	 * convert this datasource to an offline datasource 
-	 * before sending it to the core.
-	 * @return an offline string, if the offline modus 
-	 * has been activated, else, just return the original string
+	 * If the offline modus has been activated, then convert this datasource to
+	 * an offline datasource before sending it to the core.
+	 * 
+	 * @return an call to close this activity and returns the offline string
+	 * if the offline modus has been activated, else, just return the original string
 	 */
-	public String changeToOfflineString(String url){
+	public void changeToOfflineString(final String url){
 		ToggleButton offlineToggle = (ToggleButton)findViewById(R.id.offlineToggle);
 		if(offlineToggle.isChecked()){ //online modus
-			return url;
+			closeScanner(url);
 		}else{
-			OfflineConverter offlineConverter = new OfflineConverter(url);
-			try{
-				return offlineConverter.convert();
-			}catch(IOException io){
-				io.printStackTrace();
-				Log.e("barcode", "Unable to convert the online url to an offline file");;
-				return url;
-			}
+			new CallOfflineConverter().execute(url);
 		}
 	}
-	
-	private void scan(){
+
+	private void scan() {
 		IntentIntegrator integrator = new IntentIntegrator(this);
 		integrator.initiateScan();
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		IntentResult scanResult = IntentIntegrator.parseActivityResult(
 				requestCode, resultCode, data);
 		if (scanResult != null) {
-			String[] url = new String[1];
-			url[0] = changeToOfflineString(scanResult.getContents());
-			
-			if((url[0] == null || url[0].equals("null"))  && data != null ){ //if no url is found: scan again
-				Toast.makeText(this, "No url found, scan again!", Toast.LENGTH_LONG).show();
+
+			if ((scanResult.getContents() == null || scanResult.getContents().equals("null")) && data != null) { 
+				// if no url is found: scan again
+				Toast.makeText(this, "No url found, scan again!",
+						Toast.LENGTH_LONG).show();
 				scan();
 				return;
-			}else{ // url found, return it as result.
-				Intent intent = new Intent();
-				intent.putExtra("resultType", resultType);
-				intent.putExtra("url", url);
-				setResult(BarcodeService.ACTIVITY_REQUEST_CODE, intent);
-				
-				SharedPreferences sharedPreferences = getSharedPreferences(sharedPrefDataSource, MODE_PRIVATE);
-				sharedPreferences.edit().putString("url", scanResult.getContents()).commit();				
+			} else { // url found, return it as result.
+
+				SharedPreferences sharedPreferences = getSharedPreferences(
+						sharedPrefDataSource, MODE_PRIVATE);
+				sharedPreferences.edit()
+						.putString("url", scanResult.getContents()).commit();
+				changeToOfflineString(scanResult.getContents());
 			}
 		}
 		super.onActivityResult(requestCode, resultCode, data);
-		finish();
 	}
+	
+	class CallOfflineConverter extends AsyncTask<String, String, String> {
+		
+		private Exception exception;
+
+		@Override
+		protected String doInBackground(String... arg0) {
+			OfflineConverter offlineConverter = new OfflineConverter(arg0[0]);
+			try {
+				closeScanner(offlineConverter.convert());
+			} catch (IOException e) {
+				e.printStackTrace();
+				Log.e("barcode", "Unable to convert the online url to an offline file");;
+			}
+			return "success";
+		}
+		
+	}
+		
 }

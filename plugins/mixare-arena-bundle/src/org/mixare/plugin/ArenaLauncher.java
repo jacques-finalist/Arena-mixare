@@ -65,8 +65,6 @@ public class ArenaLauncher extends Activity {
 				ex.printStackTrace();
 			}
 		}
-		finish();
-
 	}
 
 }
