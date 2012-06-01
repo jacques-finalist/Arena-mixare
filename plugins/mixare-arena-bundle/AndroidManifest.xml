@@ -69,6 +69,7 @@
             </intent-filter>
         </service>
         
+         <activity android:name="ItemViewActivity" android:exported="true" android:theme="@style/Theme.Transparent"></activity>
         
     </application>
 

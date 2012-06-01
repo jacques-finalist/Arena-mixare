@@ -9,7 +9,6 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 import android.os.Environment;
-import android.os.StrictMode;
 import android.util.Log;
 
 /**
