@@ -53,9 +53,9 @@ public class ImageMarker extends PluginMarker{
 	@Override
 	public ClickHandler fClick() {
 		if(isClickValid()){
-			Log.w("marker", "marker clicked");
 			Service service = ArenaProcessorService.instance;
 			Intent dialogIntent = new Intent(service.getBaseContext(), ItemViewActivity.class);
+			dialogIntent.putExtra("url", getURL());
 			dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			service.getApplication().startActivity(dialogIntent);	
 		}

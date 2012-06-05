@@ -11,7 +11,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -86,7 +85,13 @@ public class BarcodeActivity extends Activity {
 		if(offlineToggle.isChecked()){ //online modus
 			closeScanner(url);
 		}else{
-			new CallOfflineConverter().execute(url);
+			OfflineConverter offlineConverter = new OfflineConverter(url);
+			try {
+				closeScanner(offlineConverter.convert());
+			} catch (IOException e) {
+				e.printStackTrace();
+				Log.e("barcode", "Unable to convert the online url to an offline file");;
+			}
 		}
 	}
 
@@ -117,24 +122,6 @@ public class BarcodeActivity extends Activity {
 			}
 		}
 		super.onActivityResult(requestCode, resultCode, data);
-	}
-	
-	class CallOfflineConverter extends AsyncTask<String, String, String> {
-		
-		private Exception exception;
-
-		@Override
-		protected String doInBackground(String... arg0) {
-			OfflineConverter offlineConverter = new OfflineConverter(arg0[0]);
-			try {
-				closeScanner(offlineConverter.convert());
-			} catch (IOException e) {
-				e.printStackTrace();
-				Log.e("barcode", "Unable to convert the online url to an offline file");;
-			}
-			return "success";
-		}
-		
 	}
 		
 }
