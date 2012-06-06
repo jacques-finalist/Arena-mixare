@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ARena</string>
+    <string name="scan_arena">Scan een Arena</string>
+    <string name="use_previous">Gebruik de laatste Arena</string>
+    <string name="manual">Handleiding</string>
+    <string name="online_mode">Online Modus</string>
+    <string name="offline_mode">Offline Modus</string>
+
+</resources>

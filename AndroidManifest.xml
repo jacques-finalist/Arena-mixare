@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.mixare.plugin"
+    android:versionCode="3"
+    android:versionName="1.1" >
+
+    <uses-sdk android:minSdkVersion="3" android:targetSdkVersion="10"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    
+    <application
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name" >
+        
+        <activity android:name="ArenaLauncher" android:icon="@drawable/arenalogo"
+				  android:label="@string/app_name" android:screenOrientation="landscape" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>   
+        </activity>
+        
+        
+        <activity android:name="ArenaSplashActivity" android:exported="true"></activity>
+        <service
+            android:name=".service.ArenaSplashService"
+            android:exported="true" >
+            <intent-filter>
+               <action android:name="org.mixare.plugin.bootstrap1"/>
+               <category android:name="mixare.intent.category.BOOTSTRAP_PLUGIN"/>
+            </intent-filter>
+        </service>
+        
+        <activity android:name="BarcodeActivity" android:exported="true"></activity>
+        <service
+            android:name=".service.BarcodeService"
+            android:exported="true" >
+            <intent-filter>
+               <action android:name="org.mixare.plugin.bootstrap2"/>
+               <action android:name="org.mixare.plugin.dataselector"/>
+               <category android:name="mixare.intent.category.BOOTSTRAP_PLUGIN"/>
+            </intent-filter>
+        </service>
+        
+        <service
+            android:name=".service.ImageMarkerService"
+            android:exported="true" >
+            <intent-filter>
+               <action android:name="org.mixare.plugin.marker"/>
+               <category android:name="mixare.intent.category.MARKER_PLUGIN"/>
+            </intent-filter>
+        </service>
+        
+        <service
+            android:name=".service.ArenaProcessorService"
+            android:exported="true" >
+            <intent-filter>
+               <action android:name="org.mixare.plugin.datahandler"/>
+               <category android:name="mixare.intent.category.DATAHANDLER_PLUGIN"/>
+            </intent-filter>
+        </service>
+                
+        <service
+            android:name=".service.OfflineService"
+            android:exported="true" >
+            <intent-filter>
+               <action android:name="org.mixare.plugin.dataconverter"/>
+               <category android:name="mixare.intent.category.DATACONVERTER_PLUGIN"/>
+            </intent-filter>
+        </service>
+        
+         <activity android:name="ItemViewActivity" android:exported="true" android:theme="@style/Theme.Transparent"></activity>
+        
+    </application>
+
+</manifest>
