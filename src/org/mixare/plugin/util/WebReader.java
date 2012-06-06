@@ -23,8 +23,7 @@ public class WebReader {
 		this.url = url;
 		new readWebPage().execute(this);
 		long now = System.currentTimeMillis();
-		while(pageFound == false && System.currentTimeMillis() > now + 5000){
-			
+		while(pageFound == false && System.currentTimeMillis() < now + 10000){
 		}
 	}
 	

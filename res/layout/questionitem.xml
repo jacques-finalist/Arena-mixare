@@ -1,64 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:padding="10dip"
+    android:layout_height="wrap_content"
     android:background="#FFF"
     android:gravity="center_horizontal"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:weightSum="1.0" >
 
     <TextView
         android:id="@+id/question"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.00"
-        android:gravity="center_horizontal"
-        android:text="TextView"
+		android:layout_width="wrap_content" 
+        android:layout_height="wrap_content" 
         android:textColor="#333" />
-
+    
     <EditText
         android:id="@+id/answerField"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.00" >
-
-        <requestFocus />
-    </EditText>
-
-    <RadioButton
-        android:id="@+id/answerA"
+        android:hint="Vul het antwoord hier in"
+        android:visibility="gone" />
+    
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.00"
-        android:textColor="#333"
-        android:text="A. ********" />
-
-    <RadioButton
-        android:id="@+id/answerB"
+    	android:layout_height="wrap_content"
+    	android:gravity="left"
+        android:visibility="gone">
+		<RadioButton
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:textColor="#333"
+	        android:visibility="gone" />
+		 <TextView
+	        android:id="@+id/answer1"
+			android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content" 
+	        android:textColor="#333" />
+	</LinearLayout>
+	
+     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#333"
-        android:text="B. ********" />
+    	android:layout_height="wrap_content"
+    	android:gravity="left"
+        android:visibility="gone">
+		 <RadioButton
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:textColor="#333"
+	        android:visibility="gone" />
+		  <TextView
+	        android:id="@+id/answer2"
+			android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content" 
+	        android:textColor="#333" />
+	</LinearLayout>
 
-    <RadioButton
-        android:id="@+id/answerC"
+     	
+     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.00"
-        android:textColor="#333"
-        android:text="C. ********" />
-
-    <RadioButton
-        android:id="@+id/answerD"
+    	android:layout_height="wrap_content"
+	    android:gravity="left"
+        android:visibility="gone">	  
+	    <RadioButton
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:textColor="#333"
+	        android:visibility="gone" />
+	     <TextView
+	        android:id="@+id/answer3"
+			android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content" 
+	        android:textColor="#333" />
+    </LinearLayout>
+    
+     	
+     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.00"
-        android:textColor="#333"
-        android:text="D. ********" />
-
+    	android:layout_height="wrap_content"
+    	android:gravity="left"
+        android:visibility="gone">
+	    <RadioButton
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:textColor="#333"
+	        android:visibility="gone" />
+	     <TextView
+	        android:id="@+id/answer4"
+			android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content" 
+	        android:textColor="#333" />
+	</LinearLayout>
+	
     <Button
         android:id="@+id/submit"
-        android:layout_width="126dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Submit" />
-
 </LinearLayout>

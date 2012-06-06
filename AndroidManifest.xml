@@ -21,7 +21,7 @@
         </activity>
         
         
-        <activity android:name="ArenaSplashActivity" android:exported="true"></activity>
+        <activity android:name="ArenaSplashActivity" android:exported="true" android:noHistory="true"></activity>
         <service
             android:name=".service.ArenaSplashService"
             android:exported="true" >
@@ -59,16 +59,7 @@
                <category android:name="mixare.intent.category.DATAHANDLER_PLUGIN"/>
             </intent-filter>
         </service>
-                
-        <service
-            android:name=".service.OfflineService"
-            android:exported="true" >
-            <intent-filter>
-               <action android:name="org.mixare.plugin.dataconverter"/>
-               <category android:name="mixare.intent.category.DATACONVERTER_PLUGIN"/>
-            </intent-filter>
-        </service>
-        
+                        
          <activity android:name="ItemViewActivity" android:exported="true" android:theme="@style/Theme.Transparent"></activity>
         
     </application>
