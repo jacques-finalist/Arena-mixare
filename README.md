@@ -1,8 +1,3 @@
-Arena-mixare
-============
-
-Arena plugin for mixare
-=======
 README
 ===========
 Arena branch of mixare
