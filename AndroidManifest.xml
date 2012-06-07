@@ -31,9 +31,9 @@
             </intent-filter>
         </service>
         
-        <activity android:name="BarcodeActivity" android:exported="true"></activity>
+        <activity android:name=".MenuActivity" android:exported="true"></activity>
         <service
-            android:name=".service.BarcodeService"
+            android:name=".service.MenuService"
             android:exported="true" >
             <intent-filter>
                <action android:name="org.mixare.plugin.bootstrap2"/>
@@ -61,6 +61,7 @@
         </service>
                         
          <activity android:name="ItemViewActivity" android:exported="true" android:theme="@style/Theme.Transparent"></activity>
+         <activity android:name="OfflineDownloadActivity"></activity>
         
     </application>
 

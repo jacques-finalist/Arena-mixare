@@ -9,10 +9,10 @@ import android.os.RemoteException;
 
 public class ArenaSplashService extends Service{
 
-	private final String ACTIVITY_PACKAGE = "org.mixare.plugin";	
-	private final String ACTIVITY_NAME = "org.mixare.plugin.ArenaSplashActivity";
-	private final String PLUGIN_NAME = "arena-splash";
-	private final int Z_INDEX = 0;
+	private static final String ACTIVITY_PACKAGE = "org.mixare.plugin";	
+	private static final String ACTIVITY_NAME = "org.mixare.plugin.ArenaSplashActivity";
+	private static final String PLUGIN_NAME = "arena-splash";
+	private static final int Z_INDEX = 0;
 	public static final int ACTIVITY_REQUEST_CODE = 2118; 
 	
 	@Override

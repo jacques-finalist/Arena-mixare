@@ -7,12 +7,12 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.os.RemoteException;
 
-public class BarcodeService extends Service{
+public class MenuService extends Service{
 
-	private final String ACTIVITY_PACKAGE = "org.mixare.plugin";	
-	private final String ACTIVITY_NAME = "org.mixare.plugin.BarcodeActivity";
-	private final String PLUGIN_NAME = "barcode";
-	private final int Z_INDEX = 100;
+	private static final String ACTIVITY_PACKAGE = "org.mixare.plugin";	
+	private static final String ACTIVITY_NAME = "org.mixare.plugin.MenuActivity";
+	private static final String PLUGIN_NAME = "menu";
+	private static final int Z_INDEX = 100;
 	public static final int ACTIVITY_REQUEST_CODE = 2118; 
 	
 	@Override

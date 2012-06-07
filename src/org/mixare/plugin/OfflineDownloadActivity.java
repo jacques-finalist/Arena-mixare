@@ -9,6 +9,9 @@ import android.widget.TextView;
 
 public class OfflineDownloadActivity extends Activity{
 
+	private static final String COLOR_DARK_GREEN = "#0B0";
+	private static final String COLOR_DARK_RED = "B00";
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -17,18 +20,17 @@ public class OfflineDownloadActivity extends Activity{
 	}
 	
 	private void buildGui(){
-		setConnectionStatusGuiColor();
-		
+		setConnectionStatusGuiColor();		
 	}
 	
 	private void setConnectionStatusGuiColor(){
 		TextView connectionStatus = (TextView)findViewById(R.id.connectionStatus);
 		if(isInternetConnected()){
 			connectionStatus.setText(R.string.internet_status_connected);
-			connectionStatus.setTextColor(Color.parseColor("#0B0")); //darkgreen 
+			connectionStatus.setTextColor(Color.parseColor(COLOR_DARK_GREEN));
 		}else{
 			connectionStatus.setText(R.string.internet_status_disconnected);
-			connectionStatus.setTextColor(Color.parseColor("#B00")); //darkred
+			connectionStatus.setTextColor(Color.parseColor(COLOR_DARK_RED));
 		}
 	}
 	
@@ -39,7 +41,6 @@ public class OfflineDownloadActivity extends Activity{
 		 }else{
 			 return false;
 		 }
-	}
-	
+	}	
 	
 }

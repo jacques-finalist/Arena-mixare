@@ -17,7 +17,6 @@ import org.mixare.plugin.service.ArenaProcessorService;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.util.Log;
 
 /**
  * @author A.Egal
@@ -33,8 +32,8 @@ public class ImageMarker extends PluginMarker{
 	private float mouseClickY;
 
 	public ImageMarker(int id, String title, double latitude, double longitude,
-			double altitude, String URL, int type, int color) {
-		super(id, title, latitude, longitude, altitude, URL, type, color);
+			double altitude, String url, int type, int color) {
+		super(id, title, latitude, longitude, altitude, url, type, color);
 	}
 
 	@Override
@@ -53,7 +52,7 @@ public class ImageMarker extends PluginMarker{
 	@Override
 	public ClickHandler fClick() {
 		if(isClickValid()){
-			Service service = ArenaProcessorService.instance;
+			Service service = ArenaProcessorService.getInstance();
 			Intent dialogIntent = new Intent(service.getBaseContext(), ItemViewActivity.class);
 			dialogIntent.putExtra("url", getURL());
 			dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -67,8 +66,9 @@ public class ImageMarker extends PluginMarker{
 		float currentAngle = MixUtils.getAngle(cMarker.x, cMarker.y,
 				signMarker.x, signMarker.y);
 		//if the marker is not active (i.e. not shown in AR view) we don't have to check it for clicks
-		if (!isActive() && !isVisible)
+		if (!isActive() && !isVisible){
 			return false;
+		}
 
 		pPt.x = mouseClickX - signMarker.x;
 		pPt.y = mouseClickY - signMarker.y;

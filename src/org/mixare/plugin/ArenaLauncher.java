@@ -11,8 +11,7 @@ import android.widget.Toast;
 public class ArenaLauncher extends Activity {
 
 	// is set when mixare is installed
-	boolean isMixareInstalled = false;
-
+	private boolean isMixareInstalled = false;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -29,14 +28,8 @@ public class ArenaLauncher extends Activity {
 				isMixareInstalled = true;
 			}
 		} catch (PackageManager.NameNotFoundException ex) {
-			ex.printStackTrace();
 		}
 
-	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
 	}
 
 	@Override
@@ -54,16 +47,13 @@ public class ArenaLauncher extends Activity {
 
 		} else {
 			// Mixare is not installed, let's go to the market!
-			try {
-				Toast.makeText(this, "Mixare moet geinstalleerd zijn om de applicatie te kunnen gebruiken.", Toast.LENGTH_LONG).show();
-				Intent i = new Intent();
-				i.setAction(Intent.ACTION_VIEW);
-				i.setData(Uri.parse("market://details?id=org.mixare"));
-				startActivity(i);
-
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
+			Toast.makeText(this,
+					"Mixare moet geinstalleerd zijn om de applicatie te kunnen gebruiken.",
+					Toast.LENGTH_LONG).show();
+			Intent i = new Intent();
+			i.setAction(Intent.ACTION_VIEW);
+			i.setData(Uri.parse("market://details?id=org.mixare"));
+			startActivity(i);
 		}
 		finish();
 	}

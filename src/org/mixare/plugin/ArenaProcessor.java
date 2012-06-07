@@ -24,14 +24,12 @@ public class ArenaProcessor extends PluginDataProcessor {
 
 	@Override
 	public String[] getUrlMatch() {
-		String[] str = { "arena" };
-		return str;
+		return new String[]{ "arena" };
 	}
 
 	@Override
 	public String[] getDataMatch() {
-		String[] str = { "arena" };
-		return str;
+		return new String[]{ "arena" };
 	}
 
 	@Override
@@ -51,8 +49,9 @@ public class ArenaProcessor extends PluginDataProcessor {
 
 				if (jo.has("has_detail_page")
 						&& jo.getInt("has_detail_page") != 0
-						&& jo.has("webpage"))
+						&& jo.has("webpage")){
 					link = jo.getString("webpage");
+				}
 
 				Bitmap image = getBitmapFromURL(jo.getString("object_url"));
 				
@@ -79,7 +78,6 @@ public class ArenaProcessor extends PluginDataProcessor {
 			InputStream input = connection.getInputStream();
 			return BitmapFactory.decodeStream(input);
 		} catch (IOException e) {
-			e.printStackTrace();
 			return null;
 		}		
 	}

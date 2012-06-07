@@ -22,8 +22,8 @@ import android.os.RemoteException;
 
 public class ImageMarkerService extends Service{
 	
-	public final String PLUGIN_NAME = "imagemarker";
-	public final String CATEGORY_PLUGIN= "mixare.intent.category.MARKER_PLUGIN";
+	public static final String PLUGIN_NAME = "imagemarker";
+	public static final String CATEGORY_PLUGIN= "mixare.intent.category.MARKER_PLUGIN";
 	private Map<String, PluginMarker> markers = new HashMap<String, PluginMarker>();
 	private Integer count = 0;
 
@@ -40,9 +40,9 @@ public class ImageMarkerService extends Service{
 		}
 
 		@Override
-		public String buildMarker(int id, String title, double latitude, double longitude, double altitude, String URL, int type, int color)
+		public String buildMarker(int id, String title, double latitude, double longitude, double altitude, String url, int type, int color)
 				throws RemoteException {
-			PluginMarker marker = new ImageMarker(id, title, latitude, longitude, altitude, URL, type, color);
+			PluginMarker marker = new ImageMarker(id, title, latitude, longitude, altitude, url, type, color);
 			String markerName = "imageMarker-"+count+"-"+marker.getID();
 			markers.put(markerName, marker);
 			return markerName;

@@ -17,9 +17,9 @@ import android.os.RemoteException;
 
 public class ArenaProcessorService extends Service{
 
-	public final String pluginName = "arenaProcessor";
+	public static final String PLUGIN_NAME = "arenaProcessor";
 	private Map<String, ArenaProcessor> processor = new HashMap<String, ArenaProcessor>();	
-	public static ArenaProcessorService instance;
+	private static ArenaProcessorService instance;
 	private Integer count = 0;
 	
 	@Override
@@ -28,7 +28,7 @@ public class ArenaProcessorService extends Service{
 		return binder;
 	}
 	
-	public final IDataHandlerService.Stub binder = new IDataHandlerService.Stub() {
+	private final IDataHandlerService.Stub binder = new IDataHandlerService.Stub() {
 
 		@Override
 		public String build() throws RemoteException {
@@ -50,7 +50,7 @@ public class ArenaProcessorService extends Service{
 
 		@Override
 		public String getPluginName() throws RemoteException {
-			return pluginName;
+			return PLUGIN_NAME;
 		}
 
 		@Override
@@ -64,12 +64,15 @@ public class ArenaProcessorService extends Service{
 			try {
 				return processor.get(processorName).load(rawData, taskId, colour);
 			} catch (JSONException e) {
-				e.printStackTrace();
 				return new ArrayList<InitialMarkerData>();
 			}
 		}
 	
 	};
+	
+	public static ArenaProcessorService getInstance() {
+		return instance;
+	}
 
 	
 }

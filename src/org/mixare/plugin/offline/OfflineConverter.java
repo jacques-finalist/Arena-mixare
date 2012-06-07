@@ -19,7 +19,7 @@ import android.util.Log;
 public class OfflineConverter {
 
 	private String fileName;
-	private final String folder = "mixare-offline-ds";
+	private static final String FOLDER = "mixare-offline-ds";
 
 	public OfflineConverter(String url) {
 		fileName = url;
@@ -47,7 +47,7 @@ public class OfflineConverter {
 	}
 	
 	public String write() throws IOException{
-		String path = Environment.getExternalStorageDirectory() + "/" + folder + "/" + URLEncoder.encode(fileName);
+		String path = Environment.getExternalStorageDirectory() + "/" + FOLDER + "/" + URLEncoder.encode(fileName);
 		File file = new File(path);
 		if(!file.exists()){
 			clearDir();
@@ -61,11 +61,11 @@ public class OfflineConverter {
 	}
 	
 	private void clearDir(){
-		String path = Environment.getExternalStorageDirectory() + "/" + folder + "/";
+		String path = Environment.getExternalStorageDirectory() + "/" + FOLDER + "/";
 		File directory = new File(path);
 		if(directory.list() != null){
-			for(String fileName : directory.list()){
-				File file = new File(directory, fileName);
+			for(String fname : directory.list()){
+				File file = new File(directory, fname);
 				file.delete();
 			}
 		}else{

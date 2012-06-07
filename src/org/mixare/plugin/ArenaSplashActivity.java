@@ -12,10 +12,8 @@ import android.view.WindowManager;
 
 public class ArenaSplashActivity extends Activity {
 	
-	public final String resultType = "Splashscreen";
+	private static final String RESULT_TYPE = "Splashscreen";
 	private static final int SPLASHTIME = 2000; //2 seconds
-	protected Handler exitHandler = null;
-	protected Runnable exitRunnable = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +23,8 @@ public class ArenaSplashActivity extends Activity {
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.splashscreen);
 		// Runnable exiting the splash screen and launching the menu
+		Handler exitHandler = null;;
+		Runnable exitRunnable = null;
 		exitRunnable = new Runnable() {
 			public void run() {
 				exitSplash();
@@ -37,7 +37,7 @@ public class ArenaSplashActivity extends Activity {
 	
 	private void exitSplash() {	
 		Intent intent = new Intent();
-		intent.putExtra("resultType", resultType);
+		intent.putExtra("resultType", RESULT_TYPE);
 		setResult(ArenaSplashService.ACTIVITY_REQUEST_CODE, intent);
 		finish();
 	}

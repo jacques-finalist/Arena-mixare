@@ -39,9 +39,7 @@ public class ItemViewActivity extends Activity {
 		}
 		try {
 			buildGuiDialog(json);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+		} catch (JSONException e) {}
 	}
 	
 	private JSONObject convertStringToJson(String content){
@@ -51,7 +49,7 @@ public class ItemViewActivity extends Activity {
 			}
 			return new JSONObject(content);
 		} catch (JSONException e) {
-			throw new RuntimeException(e);
+			return null;
 		}
 	}
 	
@@ -70,23 +68,24 @@ public class ItemViewActivity extends Activity {
 	}
 	
 	private void fillMultipleChoiceAnswers(JSONArray answers) throws JSONException{
-		if(answers.length() > 0){
+		int answerLength = 0;
+		if(answers.length() > answerLength){
 			RadioButton answer = (RadioButton)findViewById(R.id.answer1);
 			answer.setText(answers.getString(0));
 			((LinearLayout)answer.getParent()).setVisibility(View.VISIBLE);
 		}
-		if(answers.length() > 1){
-			RadioButton answer = (RadioButton)findViewById(R.id.answer1);
+		if(answers.length() > ++answerLength){
+			RadioButton answer = (RadioButton)findViewById(R.id.answer2);
 			answer.setText(answers.getString(1));
 			((LinearLayout)answer.getParent()).setVisibility(View.VISIBLE);
 		}
-		if(answers.length() > 2){
-			RadioButton answer = (RadioButton)findViewById(R.id.answer1);
+		if(answers.length() > ++answerLength){
+			RadioButton answer = (RadioButton)findViewById(R.id.answer3);
 			answer.setText(answers.getString(2));
 			((LinearLayout)answer.getParent()).setVisibility(View.VISIBLE);
 		}
-		if(answers.length() > 3){
-			RadioButton answer = (RadioButton)findViewById(R.id.answer1);
+		if(answers.length() > ++answerLength){
+			RadioButton answer = (RadioButton)findViewById(R.id.answer4);
 			answer.setText(answers.getString(3));
 			((LinearLayout)answer.getParent()).setVisibility(View.VISIBLE);
 		}

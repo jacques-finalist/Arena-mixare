@@ -19,11 +19,18 @@ public class WebReader {
 	private String result;
 	private boolean pageFound = false;
 	
+	private static final int TEN_SECONDS = 10 * 1000;
+	private static final int ONE_SECOND = 1 * 1000;
+	
+	
 	public WebReader(String url){
 		this.url = url;
 		new readWebPage().execute(this);
 		long now = System.currentTimeMillis();
-		while(pageFound == false && System.currentTimeMillis() < now + 10000){
+		while(!pageFound && System.currentTimeMillis() < now + TEN_SECONDS){
+			try {
+				Thread.sleep(ONE_SECOND);
+			} catch (InterruptedException e) {}
 		}
 	}
 	
@@ -32,12 +39,13 @@ public class WebReader {
 		BufferedReader in = new BufferedReader(new InputStreamReader(
 				u.openStream()));
 
-		String result = "";
+		String webresult = "";
 		String inputLine;
-		while ((inputLine = in.readLine()) != null)
-			result += inputLine;
+		while ((inputLine = in.readLine()) != null){
+			webresult += inputLine;
+		}
 		in.close();
-		return result;
+		return webresult;
 	}
 	
 	public String getResult() {
@@ -49,12 +57,10 @@ public class WebReader {
 		@Override
 		protected WebReader doInBackground(WebReader... params) {
 			try {
-				String result = params[0].readWebPageToString();
-				params[0].result = result;
+				params[0].result = params[0].readWebPageToString();
 				params[0].pageFound = true;
 				return params[0];
 			} catch (IOException e) {
-				e.printStackTrace();
 				Log.e("barcode", "Unable to read the webpage");
 				return params[0];
 			}
