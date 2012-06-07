@@ -6,5 +6,11 @@
     <string name="manual">Handleiding</string>
     <string name="online_mode">Online Modus</string>
     <string name="offline_mode">Offline Modus</string>
+    <string name="offline_explanation">Om gebruik te maken van de offline modus, moet de data eenmalig opgehaald worden via het internet.</string>
+    <string name="internet_status_connected">Internet verbinding: aan</string>
+    <string name="internet_status_disconnected">Internet verbinding: uit</string>
+    <string name="continue_to_next">Doorgaan</string>
+    <string name="download_data">Download gegevens</string>
+    <string name="data_already_downloaded">De gegevens zijn al gedownload. U kunt doorgaan</string>
 
 </resources>
