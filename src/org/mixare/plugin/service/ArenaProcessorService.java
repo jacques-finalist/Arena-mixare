@@ -73,7 +73,6 @@ public class ArenaProcessorService extends Service{
 	public static ArenaProcessorService getInstance() {
 		return instance;
 	}
-
 	
 }
 

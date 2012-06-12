@@ -1,7 +1,8 @@
 package org.mixare.plugin;
 
-import org.mixare.plugin.intent.IntentIntegrator;
-import org.mixare.plugin.intent.IntentResult;
+import org.mixare.plugin.R;
+import org.mixare.plugin.barcodeintent.IntentIntegrator;
+import org.mixare.plugin.barcodeintent.IntentResult;
 import org.mixare.plugin.service.MenuService;
 
 import android.app.Activity;
@@ -127,7 +128,7 @@ public class MenuActivity extends Activity {
 		}
 		if (data != null && data.getStringExtra(OFFLINE_ACTIVITY_CLOSED) != null){
 			//Received result from OfflineDownloadActivity:
-			closeAndContinueToNextActivity(data.getStringExtra(OFFLINE_ACTIVITY_CLOSED));			
+			closeActivity(data.getStringExtra(OFFLINE_ACTIVITY_CLOSED));			
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}

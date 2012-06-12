@@ -1,5 +1,6 @@
 package org.mixare.plugin;
 
+import org.mixare.plugin.R;
 import org.mixare.plugin.service.ArenaSplashService;
 
 import android.app.Activity;

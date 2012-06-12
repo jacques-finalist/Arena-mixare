@@ -1,4 +1,4 @@
-package org.mixare.plugin.intent;
+package org.mixare.plugin.barcodeintent;
 
 /*
  * Copyright 2009 ZXing authors

@@ -1,9 +1,11 @@
 package org.mixare.plugin.util;
 
-import java.io.BufferedReader;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
 import java.net.URL;
+import java.net.URLConnection;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -17,7 +19,9 @@ public class WebReader {
 
 	private String url;
 	private String result;
+	private byte[] byteResult;
 	private boolean pageFound = false;
+	private String mimeType;
 	
 	private static final int TEN_SECONDS = 10 * 1000;
 	private static final int ONE_SECOND = 1 * 1000;
@@ -34,22 +38,33 @@ public class WebReader {
 		}
 	}
 	
-	private String readWebPageToString() throws IOException {
+	public void readWebPageToString() throws IOException {
 		URL u = new URL(url);
-		BufferedReader in = new BufferedReader(new InputStreamReader(
-				u.openStream()));
-
-		String webresult = "";
-		String inputLine;
-		while ((inputLine = in.readLine()) != null){
-			webresult += inputLine;
+		InputStream in = new BufferedInputStream(u.openStream());
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		
+		byte[] buf = new byte[1024];
+		int n = 0;
+		while (-1!=(n= in.read(buf))){
+		   out.write(buf, 0, n);
 		}
+		
+		out.close();
 		in.close();
-		return webresult;
+		byteResult = out.toByteArray();
+		result = new String(byteResult);
 	}
 	
 	public String getResult() {
 		return result;
+	}
+	
+	public byte[] getByteResult() {
+		return byteResult;
+	}
+	
+	public String getMimeType() {
+		return mimeType;
 	}
 	
 	class readWebPage extends AsyncTask<WebReader, String, WebReader> {
@@ -57,11 +72,11 @@ public class WebReader {
 		@Override
 		protected WebReader doInBackground(WebReader... params) {
 			try {
-				params[0].result = params[0].readWebPageToString();
+				params[0].readWebPageToString();
 				params[0].pageFound = true;
 				return params[0];
 			} catch (IOException e) {
-				Log.e("barcode", "Unable to read the webpage");
+				Log.e("barcode", "Unable to read the webpage"+ e.getMessage());
 				return params[0];
 			}
 		}

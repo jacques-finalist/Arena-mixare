@@ -6,10 +6,12 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 public class ArenaLauncher extends Activity {
 
+	private final static String TAG = "ArenaLauncher";
 	// is set when mixare is installed
 	private boolean isMixareInstalled = false;
 
@@ -28,6 +30,7 @@ public class ArenaLauncher extends Activity {
 				isMixareInstalled = true;
 			}
 		} catch (PackageManager.NameNotFoundException ex) {
+			Log.e(TAG, "package: org.mixare not found in the market.");
 		}
 
 	}
