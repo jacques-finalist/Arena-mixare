@@ -44,7 +44,7 @@
         </service>
         
         <service
-            android:name=".service.ImageMarkerService"
+            android:name=".service.OfflineImageMarkerService"
             android:exported="true" >
             <intent-filter>
                <action android:name="org.mixare.plugin.marker"/>

@@ -12,7 +12,7 @@ import org.mixare.lib.marker.draw.PrimitiveProperty;
 import org.mixare.lib.render.Camera;
 import org.mixare.lib.render.MixVector;
 import org.mixare.lib.service.IMarkerService;
-import org.mixare.plugin.ImageMarker;
+import org.mixare.plugin.OfflineCapableImageMarker;
 
 import android.app.Service;
 import android.content.Intent;
@@ -20,7 +20,7 @@ import android.location.Location;
 import android.os.IBinder;
 import android.os.RemoteException;
 
-public class ImageMarkerService extends Service{
+public class OfflineImageMarkerService extends Service{
 	
 	public static final String PLUGIN_NAME = "imagemarker";
 	public static final String CATEGORY_PLUGIN= "mixare.intent.category.MARKER_PLUGIN";
@@ -42,7 +42,8 @@ public class ImageMarkerService extends Service{
 		@Override
 		public String buildMarker(int id, String title, double latitude, double longitude, double altitude, String url, int type, int color)
 				throws RemoteException {
-			PluginMarker marker = new ImageMarker(id, title, latitude, longitude, altitude, url, type, color);
+			//used OfflineCapableImageMarker instead of the normal imagemarker
+			PluginMarker marker = new OfflineCapableImageMarker(id, title, latitude, longitude, altitude, url, type, color);
 			String markerName = PLUGIN_NAME + "-"+(++count)+"-"+marker.getID();
 			markers.put(markerName, marker);
 			return markerName;

@@ -17,6 +17,7 @@ import android.util.Log;
  */
 public class WebReader {
 
+	private static final String TAG = "WebReader";
 	private String url;
 	private String result;
 	private byte[] byteResult;
@@ -76,7 +77,7 @@ public class WebReader {
 				params[0].pageFound = true;
 				return params[0];
 			} catch (IOException e) {
-				Log.e("barcode", "Unable to read the webpage"+ e.getMessage());
+				Log.e(TAG, "Unable to read the webpage"+ e.getMessage());
 				return params[0];
 			}
 		}
