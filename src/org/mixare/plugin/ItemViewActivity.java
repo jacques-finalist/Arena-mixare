@@ -1,23 +1,21 @@
 package org.mixare.plugin;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URLEncoder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.mixare.lib.HtmlUnescape;
 import org.mixare.lib.MixUtils;
 import org.mixare.plugin.util.WebReader;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -31,13 +29,16 @@ import android.widget.TextView;
 public class ItemViewActivity extends Activity {
 
 	private static final String TAG = "ItemViewActivity";
+	private static final String URL = "url";
+	private static final String QUESTION_TYPE = "Question";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getWindow().setFlags(LayoutParams.FLAG_NOT_TOUCH_MODAL,	LayoutParams.FLAG_NOT_TOUCH_MODAL);
 		getWindow().setFlags(LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH, LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH);
-		buildView(getIntent().getExtras().getString("url"));
+		setTheme(android.R.style.Theme_Dialog);
+		buildView(getIntent().getExtras().getString(URL));
 		LayoutParams params = getWindow().getAttributes(); 
         params.width= LayoutParams.FILL_PARENT; 
         getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
@@ -46,7 +47,7 @@ public class ItemViewActivity extends Activity {
 	private void buildView(String url){
 		JSONObject json = processUrlToJson(url);
 		if(json == null){
-			Log.e("itemviewactivity", "json == null");
+			Log.e(TAG, "exception: json == null");
 			return;
 		}
 		try {
@@ -66,40 +67,34 @@ public class ItemViewActivity extends Activity {
 	}
 	
 	private void buildGuiDialog(JSONObject json) throws JSONException{
-		if(json.getString("type").equals("Question")){
-			setContentView(R.layout.questionitem);
-			TextView question = (TextView)findViewById(R.id.question);
-			question.setText(json.getString("description"));
-			JSONArray answers = json.getJSONArray("answers");
-			if(answers.length() > 0){
-				fillMultipleChoiceAnswers(answers);
-			}else{
-				fillOpenAnswer();
-			}
+		if(json.getString("type").equals(QUESTION_TYPE)){
+			buildQuestion(json);
+		}
+		else if(json.getString("type").equals("Question")){
+			buildQuestion(json);
+		}
+	}
+	
+	private void buildQuestion(JSONObject json) throws JSONException{
+		setContentView(R.layout.questionitem);
+		TextView question = (TextView)findViewById(R.id.question);
+		question.setText(json.getString("description"));
+		JSONArray answers = json.getJSONArray("answers");
+		if(answers.length() > 0){
+			fillMultipleChoiceAnswers(answers);
+		}else{
+			fillOpenAnswer();
 		}
 	}
 	
 	private void fillMultipleChoiceAnswers(JSONArray answers) throws JSONException{
-		int answerLength = 0;
-		if(answers.length() > answerLength){
-			RadioButton answer = (RadioButton)findViewById(R.id.answer1);
-			answer.setText(answers.getString(0));
-			((LinearLayout)answer.getParent()).setVisibility(View.VISIBLE);
-		}
-		if(answers.length() > ++answerLength){
-			RadioButton answer = (RadioButton)findViewById(R.id.answer2);
-			answer.setText(answers.getString(1));
-			((LinearLayout)answer.getParent()).setVisibility(View.VISIBLE);
-		}
-		if(answers.length() > ++answerLength){
-			RadioButton answer = (RadioButton)findViewById(R.id.answer3);
-			answer.setText(answers.getString(2));
-			((LinearLayout)answer.getParent()).setVisibility(View.VISIBLE);
-		}
-		if(answers.length() > ++answerLength){
-			RadioButton answer = (RadioButton)findViewById(R.id.answer4);
-			answer.setText(answers.getString(3));
-			((LinearLayout)answer.getParent()).setVisibility(View.VISIBLE);
+		for(int i = 0; i < 4; i++){
+			if(answers.length() > i){
+				int identifier = getResources().getIdentifier("answer"+(i+1), null, null);
+				RadioButton answer = (RadioButton)findViewById(identifier);
+				answer.setText(answers.getString(i));
+				((LinearLayout)answer.getParent()).setVisibility(View.VISIBLE);
+			}
 		}
 	}
 	
@@ -123,7 +118,7 @@ public class ItemViewActivity extends Activity {
 	private JSONObject processUrlToJson(String src){
 		String url = MixUtils.parseAction(src);
 		if(url.startsWith("http://")){
-			WebReader webReader = new WebReader(MixUtils.parseAction(url));
+			WebReader webReader = new WebReader(url);
 			return convertStringToJson(webReader.getResult());
 		}else if(url.startsWith("file://")){
 			url = encodeUrlAgain(url);
@@ -164,4 +159,12 @@ public class ItemViewActivity extends Activity {
 		String[] u = url.split(split);
 		return u[0] + split + URLEncoder.encode(u[1]);		
 	}
+	
+	protected void onDestroy() {
+		Intent i = new Intent();
+		i.setClassName("org.mixare", "org.mixare.MixView");
+		startActivity(i);	
+		super.onDestroy();
+	}
+	
 }

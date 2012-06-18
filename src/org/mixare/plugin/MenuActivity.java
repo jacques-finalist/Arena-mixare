@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -24,6 +26,7 @@ public class MenuActivity extends Activity {
 	private static final String OFFLINE_ACTIVITY_CLOSED = "offline-activity-closed";
 	private static final int OFFLINE_ACTIVITY_REQUESTCODE = 1503; //unique random number
 	private static final String URL_STRING = "url";
+	private static final String CLOSE_ACTIVITY_CALL = "closed";
 	private static final String RESULT_TYPE_STRING = "resultType";
 
 	@Override
@@ -150,4 +153,16 @@ public class MenuActivity extends Activity {
 		}
 	}
 		
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			Intent intent = new Intent();
+			intent.putExtra(CLOSE_ACTIVITY_CALL, "true");
+			setResult(MenuService.ACTIVITY_REQUEST_CODE, intent);
+			finish();
+			Log.e("MenuActivity", "Closing menuactivity, back button was pressed");
+			return true;
+		}
+		return false;
+	}
 }

@@ -19,6 +19,7 @@ public class ArenaLauncher extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.w(TAG, "ArenaLauncher started");
 
 		// We try to locate mixare on the phone
 		isMixareInstalled = false;
@@ -37,7 +38,7 @@ public class ArenaLauncher extends Activity {
 
 	@Override
 	public void onResume() {
-
+		Log.w(TAG, "ArenaLauncher resumed");
 		super.onResume();
 
 		// Now we should have the position, let's proceed only if mixare is
