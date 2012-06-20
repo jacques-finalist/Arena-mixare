@@ -18,6 +18,7 @@ public class OfflineCapableImageMarker extends ImageMarker{
 
 	private float mouseClickX;
 	private float mouseClickY;
+	private double radius;
 	
 	public OfflineCapableImageMarker(int id, String title, double latitude,
 			double longitude, double altitude, String url, int type, int color) {
@@ -38,6 +39,12 @@ public class OfflineCapableImageMarker extends ImageMarker{
 			service.getApplication().startActivity(dialogIntent);	
 		}
 		return null;
+	}
+	
+	@Override
+	public void setDistance(double distance) {
+		super.setDistance(distance);
+		updateVisibility();
 	}
 	
 	/**
@@ -90,6 +97,19 @@ public class OfflineCapableImageMarker extends ImageMarker{
 		}
 		if(name.equals("y")){
 			mouseClickY = (Float)primitiveProperty.getObject();
+		}
+		if(name.equals("radius")){
+			radius = (Double)primitiveProperty.getObject();
+		}
+	}
+	
+	private void updateVisibility(){
+		if(distance < radius){
+			isVisible = true;
+			setActive(true);
+		}else{
+			isVisible = false;
+			setActive(false);
 		}
 	}
 	

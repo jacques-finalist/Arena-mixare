@@ -64,6 +64,11 @@ public class ArenaProcessor extends PluginDataProcessor {
 				ma.setMarkerName(MARKER_NAME);
 				ma.setExtras("bitmap", new ParcelableProperty(
 						"android.graphics.Bitmap", image));
+				
+				if(jo.has("radius")){ //for offline
+					ma.setExtras("radius", jo.getDouble("radius"));
+				}
+				
 				initialMarkerDatas.add(ma);
 			}
 		}

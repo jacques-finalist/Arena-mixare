@@ -17,7 +17,7 @@ import android.graphics.Bitmap;
  */
 public class ImageMarker extends PluginMarker{
 
-	public static final int MAX_OBJECTS = 20;
+	public static final int MAX_OBJECTS = 50;
 	private Bitmap image; 
 
 	public ImageMarker(int id, String title, double latitude, double longitude,

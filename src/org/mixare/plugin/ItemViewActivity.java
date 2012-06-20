@@ -12,15 +12,19 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.mixare.lib.MixUtils;
+import org.mixare.plugin.util.OfflineAnswerStorage;
+import org.mixare.plugin.util.OfflineConverter;
 import org.mixare.plugin.util.WebReader;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager.LayoutParams;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -31,6 +35,8 @@ public class ItemViewActivity extends Activity {
 	private static final String TAG = "ItemViewActivity";
 	private static final String URL = "url";
 	private static final String QUESTION_TYPE = "Question";
+	private static final String INFORMATION_TYPE = "Information";
+	private static final String SHARED_PREFS_NAME = "answer_container";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +51,7 @@ public class ItemViewActivity extends Activity {
 	}
 	
 	private void buildView(String url){
-		JSONObject json = processUrlToJson(url);
+		final JSONObject json = processUrlToJson(url);
 		if(json == null){
 			Log.e(TAG, "exception: json == null");
 			return;
@@ -66,16 +72,17 @@ public class ItemViewActivity extends Activity {
 		}
 	}
 	
-	private void buildGuiDialog(JSONObject json) throws JSONException{
+	private void buildGuiDialog(final JSONObject json) throws JSONException{
+		this.setTitle(json.getString("title"));
 		if(json.getString("type").equals(QUESTION_TYPE)){
 			buildQuestion(json);
 		}
-		else if(json.getString("type").equals("Question")){
-			buildQuestion(json);
+		else if(json.getString("type").equals(INFORMATION_TYPE)){
+			buildInformation(json);
 		}
 	}
 	
-	private void buildQuestion(JSONObject json) throws JSONException{
+	private void buildQuestion(final JSONObject json) throws JSONException{
 		setContentView(R.layout.questionitem);
 		TextView question = (TextView)findViewById(R.id.question);
 		question.setText(json.getString("description"));
@@ -85,12 +92,19 @@ public class ItemViewActivity extends Activity {
 		}else{
 			fillOpenAnswer();
 		}
+		processSubmitButton(json);
+	}
+	
+	private void buildInformation(final JSONObject json) throws JSONException{
+		setContentView(R.layout.informationitem);
+		TextView description = (TextView)findViewById(R.id.description);
+		description.setText(json.getString("description"));
 	}
 	
 	private void fillMultipleChoiceAnswers(JSONArray answers) throws JSONException{
 		for(int i = 0; i < 4; i++){
 			if(answers.length() > i){
-				int identifier = getResources().getIdentifier("answer"+(i+1), null, null);
+				int identifier = getResources().getIdentifier("answer"+(i+1), "id", getPackageName());
 				RadioButton answer = (RadioButton)findViewById(identifier);
 				answer.setText(answers.getString(i));
 				((LinearLayout)answer.getParent()).setVisibility(View.VISIBLE);
@@ -101,6 +115,43 @@ public class ItemViewActivity extends Activity {
 	private void fillOpenAnswer() throws JSONException{
 		EditText answerField = (EditText)findViewById(R.id.answerField);
 		answerField.setVisibility(View.VISIBLE);	
+	}
+	
+	private void processSubmitButton(final JSONObject json) throws JSONException{
+		Button button = (Button)findViewById(R.id.submit);
+		button.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onButtonClick(json);
+			}
+		});
+	}
+	
+	private void onButtonClick(final JSONObject json){
+		SharedPreferences sharedPrefs = getSharedPreferences(SHARED_PREFS_NAME, MODE_PRIVATE);
+		JSONArray answers;
+		try {
+			answers = json.getJSONArray("answers");
+			if(answers.length() == 0){
+				EditText editText = (EditText)findViewById(R.id.answerField);
+				new OfflineAnswerStorage(json.getString("submitUrl"), editText.getText().toString())
+										.store(sharedPrefs, this);
+			}else{
+				for(int i = 0; i < 4; i++){
+					if(answers.length() > i){
+						int identifier = getResources().getIdentifier("answer"+(i+1), "id", getPackageName());
+						RadioButton answer = (RadioButton)findViewById(identifier);
+						if(answer.isChecked()){
+							new OfflineAnswerStorage(json.getString("submitUrl"), i+1+"")
+							.store(sharedPrefs, this);
+						}
+					}
+				}
+			}
+		} catch (JSONException e) {
+			Log.e(TAG, "JSONEXCEPTION occured when answering a question", e);
+		}
+		finish();
 	}
 	
 	/**
@@ -155,7 +206,7 @@ public class ItemViewActivity extends Activity {
 	 * @param url
 	 */
 	private String encodeUrlAgain(String url){
-		String split = "mixare-offline-ds/";
+		String split = OfflineConverter.FOLDER +"/";
 		String[] u = url.split(split);
 		return u[0] + split + URLEncoder.encode(u[1]);		
 	}

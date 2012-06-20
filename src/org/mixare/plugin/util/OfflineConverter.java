@@ -19,7 +19,7 @@ import android.util.Log;
 public class OfflineConverter {
 
 	private String fileName;
-	private static final String FOLDER = "mixare-offline-ds";
+	public static final String FOLDER = "mixare-offline-ds";
 	private static final String TAG = "OfflineConverter";
 
 	public OfflineConverter(String url) {

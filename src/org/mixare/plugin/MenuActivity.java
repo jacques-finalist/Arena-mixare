@@ -1,8 +1,9 @@
 package org.mixare.plugin;
 
-import org.mixare.plugin.R;
 import org.mixare.plugin.barcodeintent.IntentIntegrator;
 import org.mixare.plugin.barcodeintent.IntentResult;
+import org.mixare.plugin.notification.NotificationMgrImpl;
+import org.mixare.plugin.service.ImageMarkerService;
 import org.mixare.plugin.service.MenuService;
 
 import android.app.Activity;
@@ -10,13 +11,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 public class MenuActivity extends Activity {
@@ -36,6 +35,7 @@ public class MenuActivity extends Activity {
 		setContentView(R.layout.barcodemenu);
 		addClickHandlerForScanButton();
 		addClickHandlerForUsePreviousButton();
+		new NotificationMgrImpl(getApplicationContext());
 	}
 	
 	private void buildWindowSettings(){
@@ -94,13 +94,6 @@ public class MenuActivity extends Activity {
 		Intent intent = new Intent(this, OfflineDownloadActivity.class);
 		intent.putExtra(URL_STRING, url);
 		startActivityForResult(intent, OFFLINE_ACTIVITY_REQUESTCODE);
-		/*OfflineConverter offlineConverter = new OfflineConverter(url);
-		try {
-			closeActivity(offlineConverter.convert());
-		} catch (IOException e) {
-			e.printStackTrace();
-			Log.e("barcode", "Unable to convert the online url to an offline file");;
-		}*/
 	}
 
 	/**
@@ -111,8 +104,10 @@ public class MenuActivity extends Activity {
 	public void closeAndContinueToNextActivity(final String url){
 		ToggleButton offlineToggle = (ToggleButton)findViewById(R.id.offlineToggle);
 		if(offlineToggle.isChecked()){ //online modus
+			ImageMarkerService.useOffline = false;
 			closeActivity(url);
 		}else{
+			ImageMarkerService.useOffline = true;
 			openOfflineDownloadActivity(url);
 		}
 	}
@@ -142,7 +137,7 @@ public class MenuActivity extends Activity {
 	private void processBarcodeScannerResults(IntentResult scanResult, Intent data){
 		if ((scanResult.getContents() == null || scanResult.getContents().equals("null")) && data != null) { 
 			// if no url is found: scan again
-			Toast.makeText(this, "No url found, scan again!", Toast.LENGTH_LONG).show();
+			NotificationMgrImpl.getInstance().addNotification("No url found, scan again!");
 			scan();
 		} else { // url found, return it as result.
 			SharedPreferences sharedPreferences = getSharedPreferences(
@@ -160,7 +155,6 @@ public class MenuActivity extends Activity {
 			intent.putExtra(CLOSE_ACTIVITY_CALL, "true");
 			setResult(MenuService.ACTIVITY_REQUEST_CODE, intent);
 			finish();
-			Log.e("MenuActivity", "Closing menuactivity, back button was pressed");
 			return true;
 		}
 		return false;

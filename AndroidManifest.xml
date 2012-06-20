@@ -44,7 +44,7 @@
         </service>
         
         <service
-            android:name=".service.OfflineImageMarkerService"
+            android:name=".service.ImageMarkerService"
             android:exported="true" >
             <intent-filter>
                <action android:name="org.mixare.plugin.marker"/>
@@ -63,7 +63,8 @@
                         
          <activity android:name=".ItemViewActivity" android:exported="true" android:theme="@style/Theme.Transparent"></activity>
          <activity android:name=".OfflineDownloadActivity"></activity>
-        
+         <activity android:name=".SendAnswersOnlineActivity"></activity>
+         
     </application>
 
 </manifest>

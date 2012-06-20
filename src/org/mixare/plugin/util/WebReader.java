@@ -5,7 +5,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.net.URLConnection;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -77,7 +76,7 @@ public class WebReader {
 				params[0].pageFound = true;
 				return params[0];
 			} catch (IOException e) {
-				Log.e(TAG, "Unable to read the webpage"+ e.getMessage());
+				Log.e(TAG, "Unable to read the webpage", e);
 				return params[0];
 			}
 		}

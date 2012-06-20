@@ -12,5 +12,11 @@
     <string name="continue_to_next">Doorgaan</string>
     <string name="download_data">Download gegevens</string>
     <string name="data_already_downloaded">De gegevens zijn al gedownload. U kunt doorgaan</string>
-
+    <string name="click_here_send_answers">Klik hier om de antwoorden te versturen</string>
+	<string name="send_answers">Er is / zijn op dit moment </string>
+	<string name="send_answers_2"> antwoorden die nog niet verstuurd zijn.</string>
+	<string name="fill_answer">Vul het antwoord hier in</string>
+	<string name="send_answers_button">Stuur de antwoorden op.</string>
+	
+	
 </resources>
